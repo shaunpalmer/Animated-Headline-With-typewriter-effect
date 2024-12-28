@@ -15,3 +15,17 @@ Flexible typewriter animation.
 Supports WordPress Color Picker for headline color.
 Adjustable font size and weight.
 Fully integrated into WordPress’s General Settings.
+
+## Keywords
+
+Here are the relevant keywords for search and categorization of this plugin:
+
+- **WordPress plugin**
+- **JavaScript**
+- **Animation**
+- **Typography**
+- **Typewriter**
+- **Text Effects**
+- **Text Animation**
+- **Typewriter Effect**
+
