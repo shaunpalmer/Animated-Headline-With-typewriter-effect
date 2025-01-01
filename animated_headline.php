@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Plugin Name: Animated Headline With typewriter effect
+ * Plugin Name: Animated Headline With Typewriter Effect
  * Plugin URI: https://projectstudios.nz
  * Description: Simple forward-back-forward typewriter effect for a short animated headline. Use the shortcode [animated_headline] to display the animated headline on any page or post.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Shaun Palmer - ProjectStudios.NZ
  * Author URI: https://projectstudios.nz
  * License: GPL2
@@ -44,6 +44,10 @@ function animated_headline_shortcode()
   $message = get_option('animated_headline_message', 'Default headline message!');
   $headline_color = get_option('animated_headline_font_color', '#000000');
   $headline_size  = get_option('animated_headline_font_size', 38);
+  $animation_speed = get_option('animated_headline_animation_speed', 100);
+  $background_color = get_option('animated_headline_background_color', '#ffffff');
+  $google_font = get_option('animated_headline_google_font', 'Montserrat');
+
   ob_start();
 ?>
   <style>
@@ -66,7 +70,8 @@ function animated_headline_shortcode()
       border-right: 2px solid black;
       /* Cursor effect */
       animation: cursorBlink 1s step-start infinite;
-      font-family: 'Montserrat', sans-serif;
+      font-family: '<?php echo esc_attr($google_font); ?>', sans-serif;
+      background-color: <?php echo esc_attr($background_color); ?>;
     }
 
     .animated-text.final {
@@ -96,7 +101,7 @@ function animated_headline_shortcode()
         if (i < characters.length) {
           currentText += characters[i++];
           headline.textContent = currentText;
-          setTimeout(forward, 100);
+          setTimeout(forward, <?php echo esc_attr($animation_speed); ?>);
         } else {
           setTimeout(backward, 1000);
         }
@@ -120,7 +125,7 @@ function animated_headline_shortcode()
           if (i < characters.length) {
             currentText += characters[i++];
             headline.textContent = currentText;
-            setTimeout(finalForward, 100);
+            setTimeout(finalForward, <?php echo esc_attr($animation_speed); ?>);
           } else {
             headline.classList.add("final");
           }
@@ -153,6 +158,21 @@ function animated_headline_register_settings()
     'sanitize_callback' => 'absint',
     'default'           => 38
   ]);
+  register_setting('general', 'animated_headline_animation_speed', [
+    'type'              => 'integer',
+    'sanitize_callback' => 'absint',
+    'default'           => 100
+  ]);
+  register_setting('general', 'animated_headline_background_color', [
+    'type'              => 'string',
+    'sanitize_callback' => 'sanitize_hex_color',
+    'default'           => '#ffffff'
+  ]);
+  register_setting('general', 'animated_headline_google_font', [
+    'type'              => 'string',
+    'sanitize_callback' => 'sanitize_text_field',
+    'default'           => 'Montserrat'
+  ]);
 
   // Add a new section to General Settings
   add_settings_section(
@@ -181,6 +201,27 @@ function animated_headline_register_settings()
     'animated_headline_font_size_field',
     __('Headline Font Size (px)', 'animated-headline'),
     'animated_headline_font_size_callback',
+    'general',
+    'animated_headline_settings_section'
+  );
+  add_settings_field(
+    'animated_headline_animation_speed_field',
+    __('Animation Speed (ms)', 'animated-headline'),
+    'animated_headline_animation_speed_callback',
+    'general',
+    'animated_headline_settings_section'
+  );
+  add_settings_field(
+    'animated_headline_background_color_field',
+    __('Background Color', 'animated-headline'),
+    'animated_headline_background_color_callback',
+    'general',
+    'animated_headline_settings_section'
+  );
+  add_settings_field(
+    'animated_headline_google_font_field',
+    __('Google Font', 'animated-headline'),
+    'animated_headline_google_font_callback',
     'general',
     'animated_headline_settings_section'
   );
@@ -225,5 +266,43 @@ function animated_headline_font_size_callback()
 ?>
   <input type="number" min="10" max="100" step="1" id="animated_headline_font_size" name="animated_headline_font_size"
     value="<?php echo esc_attr($size); ?>" /> px
+<?php
+}
+
+function animated_headline_animation_speed_callback()
+{
+  $speed = get_option('animated_headline_animation_speed', 100);
+?>
+  <input type="number" min="50" max="500" step="10" id="animated_headline_animation_speed" name="animated_headline_animation_speed"
+    value="<?php echo esc_attr($speed); ?>" /> ms
+<?php
+}
+
+function animated_headline_background_color_callback()
+{
+  $color = get_option('animated_headline_background_color', '#ffffff');
+?>
+  <input type="text" id="animated_headline_background_color" name="animated_headline_background_color"
+    value="<?php echo esc_attr($color); ?>" class="my-color-field" data-default-color="#ffffff" />
+  <script>
+    (function($) {
+      $(function() {
+        $('.my-color-field').wpColorPicker();
+      });
+    })(jQuery);
+  </script>
+<?php
+}
+
+function animated_headline_google_font_callback()
+{
+  $font = get_option('animated_headline_google_font', 'Montserrat');
+  $fonts = ['Montserrat', 'Roboto', 'Open Sans', 'Lato', 'Oswald'];
+?>
+  <select id="animated_headline_google_font" name="animated_headline_google_font">
+    <?php foreach ($fonts as $f) : ?>
+      <option value="<?php echo esc_attr($f); ?>" <?php selected($font, $f); ?>><?php echo esc_html($f); ?></option>
+    <?php endforeach; ?>
+  </select>
 <?php
 }
