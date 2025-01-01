@@ -4,7 +4,7 @@
  * Plugin Name: Animated Headline With Typewriter Effect
  * Plugin URI: https://projectstudios.nz
  * Description: Simple forward-back-forward typewriter effect for a short animated headline. Use the shortcode [animated_headline] to display the animated headline on any page or post.
- * Version: 1.1.0
+ * Version: 1.2.0
  * Author: Shaun Palmer - ProjectStudios.NZ
  * Author URI: https://projectstudios.nz
  * License: GPL2
