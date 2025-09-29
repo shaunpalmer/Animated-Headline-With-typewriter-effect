@@ -1,0 +1,25 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "Animated Headline is a WordPress plugin that creates eye-catching typewriter-effect headlines, perfect for drawing user attention and reducing bounce rates. Customize font size, color, and weight effortlessly with an intuitive settings interface powered by the WordPress Settings API. This plugin offers:",
+  "main": "index.js",
+  "scripts": {
+    "build": "wp-scripts build",
+    "start": "wp-scripts start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shaunpalmer/Animated-Headline-With-typewriter-effect.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/shaunpalmer/Animated-Headline-With-typewriter-effect/issues"
+  },
+  "homepage": "https://github.com/shaunpalmer/Animated-Headline-With-typewriter-effect#readme",
+  "devDependencies": {
+    "@wordpress/scripts": "^30.24.0"
+  }
+}
