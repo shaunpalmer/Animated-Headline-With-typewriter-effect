@@ -1,0 +1,44 @@
+{
+    "apiVersion": 2,
+    "name": "animated-headline/block",
+    "version": "1.2.0",
+    "title": "Animated Headline",
+    "category": "widgets",
+    "icon": "text-page",
+    "description": "A block to display an animated headline with various effects.",
+    "supports": {
+        "html": false
+    },
+    "attributes": {
+        "message": {
+            "type": "string",
+            "default": "Your animated headline!"
+        },
+        "fontColor": {
+            "type": "string",
+            "default": "#000000"
+        },
+        "fontSize": {
+            "type": "number",
+            "default": 38
+        },
+        "animationSpeed": {
+            "type": "number",
+            "default": 100
+        },
+        "backgroundColor": {
+            "type": "string",
+            "default": "#ffffff"
+        },
+        "googleFont": {
+            "type": "string",
+            "default": "Montserrat"
+        },
+        "animationStyle": {
+            "type": "string",
+            "default": "typewriter"
+        }
+    },
+    "editorScript": "file:./index.js",
+    "viewScript": "file:./frontend.js"
+}

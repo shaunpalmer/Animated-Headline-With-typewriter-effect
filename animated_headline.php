@@ -306,3 +306,92 @@ function animated_headline_google_font_callback()
   </select>
 <?php
 }
+
+/******************************
+ * 2) GUTENBERG BLOCK
+ ******************************/
+function animated_headline_block_init() {
+    register_block_type_from_metadata( __DIR__ . '/build', [
+        'render_callback' => 'animated_headline_render_block',
+    ] );
+}
+add_action('init', 'animated_headline_block_init');
+
+function animated_headline_render_block($attributes) {
+    $message = isset($attributes['message']) ? sanitize_text_field($attributes['message']) : 'Default headline message!';
+    $headline_color = isset($attributes['fontColor']) ? sanitize_hex_color($attributes['fontColor']) : '#000000';
+    $headline_size = isset($attributes['fontSize']) ? absint($attributes['fontSize']) : 38;
+    $animation_speed = isset($attributes['animationSpeed']) ? absint($attributes['animationSpeed']) : 100;
+    $background_color = isset($attributes['backgroundColor']) ? sanitize_hex_color($attributes['backgroundColor']) : '#ffffff';
+    $google_font = isset($attributes['googleFont']) ? sanitize_text_field($attributes['googleFont']) : 'Montserrat';
+    $animation_style = isset($attributes['animationStyle']) ? sanitize_text_field($attributes['animationStyle']) : 'typewriter';
+    $unique_id = uniqid('animated-headline-');
+
+    // Enqueue the specific Google Font for this block
+    wp_enqueue_style(
+        'animated-headline-font-' . sanitize_key($google_font),
+        'https://fonts.googleapis.com/css2?family=' . urlencode($google_font) . ':wght@400;700&display=swap',
+        [],
+        null
+    );
+
+    ob_start();
+    ?>
+    <style>
+        @keyframes cursorBlink-<?php echo esc_attr($unique_id); ?> {
+            0%, 100% { border-right-color: transparent; }
+            50% { border-right-color: black; }
+        }
+
+        .animated-text-<?php echo esc_attr($unique_id); ?> {
+            display: inline-block;
+            white-space: pre-wrap;
+            font-family: '<?php echo esc_attr($google_font); ?>', sans-serif;
+            background-color: <?php echo esc_attr($background_color); ?>;
+        }
+
+        /* Typewriter Effect */
+        .animated-text-<?php echo esc_attr($unique_id); ?>.typewriter {
+            overflow: hidden;
+            border-right: 2px solid black;
+            animation: cursorBlink-<?php echo esc_attr($unique_id); ?> 1s step-start infinite;
+        }
+
+        .animated-text-<?php echo esc_attr($unique_id); ?>.typewriter.final {
+            border-right: none;
+            animation: none;
+        }
+
+        /* Fly In From Left Effect */
+        @keyframes flyInLeft-<?php echo esc_attr($unique_id); ?> {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .animated-text-<?php echo esc_attr($unique_id); ?>.fly-in-left {
+            animation: flyInLeft-<?php echo esc_attr($unique_id); ?> 1s ease-out forwards;
+        }
+
+        /* Bounce on Hover Effect */
+        @keyframes bounce-<?php echo esc_attr($unique_id); ?> {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-30px); }
+            60% { transform: translateY(-15px); }
+        }
+
+        .animated-text-<?php echo esc_attr($unique_id); ?>.bounce-hover:hover {
+            animation: bounce-<?php echo esc_attr($unique_id); ?> 1s ease;
+        }
+    </style>
+
+    <div id="<?php echo esc_attr($unique_id); ?>"
+         class="animated-text-<?php echo esc_attr($unique_id); ?> <?php echo esc_attr($animation_style); ?> wp-block-animated-headline-block"
+         style="color: <?php echo esc_attr($headline_color); ?>; font-size: <?php echo esc_attr($headline_size); ?>px;"
+         data-message="<?php echo esc_attr($message); ?>"
+         data-animation-style="<?php echo esc_attr($animation_style); ?>"
+         data-animation-speed="<?php echo esc_attr($animation_speed); ?>">
+        <?php echo esc_html($message); ?>
+    </div>
+    <?php
+    return ob_get_clean();
+}
